@@ -225,14 +225,10 @@ namespace SharpGLTF.Schema2
 
             _ValidateBeforeWriting(model);
 
-            using (var m = new MemoryStream())
+            using (FileStream fs = new FileStream($"{baseName}.glb", FileMode.OpenOrCreate))
+            using (var w = new BinaryWriter(fs))
             {
-                using (var w = new BinaryWriter(m))
-                {
-                    _BinarySerialization.WriteBinaryModel(w, model);
-                }
-
-                WriteAllBytesToEnd($"{baseName}.glb", m.ToArraySegment());
+                _BinarySerialization.WriteBinaryModel(w, model);
             }
 
             model._AfterWriting();
